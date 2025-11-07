@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<title>צפייה בקובץ טקסט</title>
+<style>
+body {
+  font-family: monospace;
+  white-space: pre-wrap;
+  background: #f7f9fc;
+  padding: 20px;
+  color: #333;
+}
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+a {
+  display: inline-block;
+  margin-bottom: 15px;
+  color: #2980b9;
+  text-decoration: none;
+  font-weight: bold;
+}
+a:hover {
+  text-decoration: underline;
+}
+h2 {
+  margin-bottom: 15px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>צפייה בקובץ: {{ filename }}</h2>
+  <a href="{{ url_for('browse') }}">🔙 חזרה לדפדפן הקבצים</a>
+  <pre>{{ content }}</pre>
+</div>
+</body>
+</html>

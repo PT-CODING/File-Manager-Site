@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>צפייה בקובץ - {{ filename }}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background: #f0f0f0;
+      direction: rtl;
+      padding: 30px;
+    }
+    .file-box {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      max-width: 1000px;
+      margin: auto;
+    }
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 20px;
+      border-radius: 10px;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      font-family: Consolas, monospace;
+    }
+    a {
+      color: #0d6efd;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="file-box">
+  <h4 class="mb-3">📄 {{ filename }}</h4>
+  <a href="{{ url_for('browse') }}" class="btn btn-outline-primary mb-3">← חזור לניהול קבצים</a>
+  <pre>{{ content }}</pre>
+</div>
+
+</body>
+</html>

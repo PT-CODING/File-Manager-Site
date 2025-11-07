@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" id="html-root">
+<head>
+<meta charset="UTF-8" />
+<title>דפדפן קבצים</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+  body {
+    font-family: 'Varela Round', sans-serif;
+    background: #f0f3f7;
+    margin: 0;
+    padding: 60px 20px 30px 20px;
+    direction: rtl;
+    color: #333;
+  }
+  a {
+    color: #2980b9;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  .container {
+    max-width: 960px;
+    margin: auto;
+    background: white;
+    border-radius: 12px;
+    padding: 20px 30px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.1);
+  }
+  h1 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #2c3e50;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+  th, td {
+    text-align: right;
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+  }
+  th {
+    background-color: #3498db;
+    color: white;
+    font-weight: 600;
+  }
+  tr:hover {
+    background-color: #f9f9f9;
+  }
+  .btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+  }
+  .btn:hover {
+    background: #2980b9;
+  }
+  .upload-section {
+    margin-top: 25px;
+    margin-bottom: 20px;
+  }
+  input[type=file] {
+    padding: 6px;
+  }
+  .info-bar {
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+  .path {
+    margin-bottom: 10px;
+  }
+  .header-controls {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+  }
+  .logout-link {
+    font-weight: 600;
+    color: #e74c3c;
+    padding: 6px 12px;
+  }
+  .logout-link:hover {
+    text-decoration: underline;
+  }
+  .footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+  }
+  select.language-toggle {
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Varela Round', sans-serif;
+  }
+  select.language-toggle:focus {
+    outline: none;
+    background: #2980b9;
+  }
+  [lang="en"] {
+    direction: ltr;
+  }
+  [lang="en"] th, [lang="en"] td {
+    text-align: left;
+  }
+  [lang="en"] .header-controls {
+    right: auto;
+    left: 10px;
+  }
+</style>
+</head>
+<body>
+  <div class="header-controls">
+    <a class="logout-link" href="{{ url_for('logout') }}" data-lang-he="התנתק" data-lang-en="Logout">התנתק</a>
+    <select class="language-toggle" onchange="toggleLanguage(this.value)">
+      <option value="he" selected>עברית</option>
+    </select>
+  </div>
+  <div class="container">
+    <h1 id="page-title" data-lang-he="דפדפן קבצים" data-lang-en="File Browser">דפדפן קבצים</h1>
+    <div class="path">
+      <span data-lang-he="נתיב נוכחי" data-lang-en="Current Path">נתיב נוכחי</span>: /
+      {% if current_path %}
+        {{ current_path }}
+      {% else %}
+        <span data-lang-he="(שורש)" data-lang-en="(Root)">(שורש)</span>
+      {% endif %}
+      {% if parent_path != current_path and current_path %}
+         | 
+        <a href="{{ url_for('browse', req_path=parent_path) }}" data-lang-he="⬆ תיקיית אב" data-lang-en="⬆ Parent Directory">⬆ תיקיית אב</a>
+      {% endif %}
+    </div>
+
+    <div class="info-bar">
+      <span data-lang-he="סה&quot;כ" data-lang-en="Total">סה"כ</span>: {{ files_count }} <span data-lang-he="קבצים" data-lang-en="Files">קבצים</span>   |   {{ dirs_count }} <span data-lang-he="תיקיות" data-lang-en="Folders">תיקיות</span>   |   <span data-lang-he="גודל כולל" data-lang-en="Total Size">גודל כולל</span>: {{ total_size }}
+    </div>
+    <div class="upload-section">
+      <h3 data-lang-he="⬆ העלאה" data-lang-en="⬆ Upload">⬆ העלאה</h3>
+
+      <!-- העלאת קבצים רגילים -->
+      <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data" style="margin-bottom: 20px;">
+        <input type="file" name="files[]" multiple />
+        <input type="hidden" name="path" value="{{ current_path }}">
+        <button type="submit" class="btn" data-lang-he="העלה קבצים" data-lang-en="Upload Files">העלה קבצים</button>
+      </form>
+
+      <!-- העלאת תיקיות -->
+      <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+        <input type="file" name="files[]" webkitdirectory directory multiple />
+        <input type="hidden" name="path" value="{{ current_path }}">
+        <button type="submit" class="btn" data-lang-he="העלה תיקיה" data-lang-en="Upload Folder">העלה תיקיה</button>
+      </form>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div style="color: green; margin-bottom: 15px; font-weight: 600;">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <table>
+      <thead>
+        <tr>
+          <th data-lang-he="שם" data-lang-en="Name">שם</th>
+          <th data-lang-he="גודל" data-lang-en="Size">גודל</th>
+          <th data-lang-he="תאריך שינוי" data-lang-en="Last Modified">תאריך שינוי</th>
+          <th data-lang-he="פעולות" data-lang-en="Actions">פעולות</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for file in files %}
+          <tr>
+            <td>
+              {% if file.is_dir %}
+                📁 <a href="{{ url_for('browse', req_path=(current_path ~ '/' ~ file.name)|trim('/')) }}">{{ file.name }}</a>
+              {% else %}
+                📄 {{ file.name }}
+              {% endif %}
+            </td>
+            <td>{{ file.size }}</td>
+            <td>{{ file.date }}</td>
+            <td>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-start; align-items: center;">
+                {% if not file.is_dir %}
+                  <a class="btn" href="{{ url_for('download', req_path=(current_path ~ '/' ~ file.name)|trim('/')) }}" data-lang-he="הורד" data-lang-en="Download">הורד</a>
+                  <a class="btn" href="{{ url_for('view_file', req_path=(current_path ~ '/' ~ file.name)|trim('/')) }}" data-lang-he="צפה" data-lang-en="View">צפה</a>
+                {% else %}
+                  <a class="btn" href="{{ url_for('download', req_path=(current_path ~ '/' ~ file.name)|trim('/')) }}" data-lang-he="הורד ZIP" data-lang-en="Download ZIP">הורד ZIP</a>
+                {% endif %}
+                <form method="POST" action="{{ url_for('delete', req_path=(current_path ~ '/' ~ file.name)|trim('/')) }}" onsubmit="return confirm(document.documentElement.lang === 'he' ? 'אתה בטוח שברצונך למחוק?' : 'Are you sure you want to delete?');" style="margin: 0;">
+                  <button type="submit" class="btn" style="background:#e74c3c;" data-lang-he="מחק" data-lang-en="Delete">מחק</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="4" style="text-align:center;" data-lang-he="אין קבצים או תיקיות" data-lang-en="No files or folders">אין קבצים או תיקיות</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="footer">
+      <a class="btn" href="https://github.com/PT-CODING/ShlomoGarala" target="_blank" data-lang-he="נוצר על ידי שלמה גרלה" data-lang-en="Created by Shlomo Garala">נוצר על ידי שלמה גרלה</a>
+    </div>
+  </div>
+
+  <script>
+    function toggleLanguage(lang) {
+      const html = document.getElementById('html-root');
+      html.lang = lang;
+
+      // Update all elements with data-lang attributes
+      document.querySelectorAll('[data-lang-he][data-lang-en]').forEach(element => {
+        element.textContent = element.getAttribute(`data-lang-${lang}`);
+      });
+
+      // Update page title
+      const titleElement = document.getElementById('page-title');
+      document.title = titleElement.getAttribute(`data-lang-${lang}`);
+    }
+  </script>
+</body>
+</html>

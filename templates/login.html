@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Page</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #ffffff;
+      overflow: hidden;
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 50px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      text-align: center;
+      width: 350px;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      margin-bottom: 25px;
+      font-size: 26px;
+      color: #00ffff;
+      text-shadow: 0 0 10px #00ffff;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 14px 20px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 30px;
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      transition: background 0.3s, box-shadow 0.3s;
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 8px #00ffff;
+    }
+
+    input::placeholder {
+      color: #bbb;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 30px;
+      background: #00ffff;
+      color: #000;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    button:hover {
+      background: #00c4c4;
+      box-shadow: 0 0 10px #00ffff;
+    }
+
+    .flash {
+      background: rgba(255, 0, 0, 0.7);
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 14px;
+      color: #fff;
+      box-shadow: 0 0 10px red;
+    }
+
+    /* Mobile-specific styles */
+    @media screen and (max-width: 600px) {
+      body {
+        height: auto;
+        min-height: 100vh;
+        padding: 20px;
+        align-items: flex-start;
+      }
+
+      .login-container {
+        width: 100%;
+        max-width: 90%;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        margin: 20px auto;
+      }
+
+      h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        text-shadow: 0 0 8px #00ffff;
+      }
+
+      input[type="text"], input[type="password"] {
+        padding: 12px 15px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        border-radius: 25px;
+        line-height: 1.5;
+      }
+
+      input:focus {
+        box-shadow: 0 0 6px #00ffff;
+      }
+
+      button {
+        padding: 12px;
+        font-size: 14px;
+        border-radius: 25px;
+        line-height: 1.5;
+        touch-action: manipulation; /* Improves touch responsiveness */
+      }
+
+      button:hover, button:focus {
+        background: #00c4c4;
+        box-shadow: 0 0 8px #00ffff;
+      }
+
+      .flash {
+        padding: 8px;
+        font-size: 12px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        line-height: 1.4;
+        box-shadow: 0 0 8px red;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>🔒 Login To System</h2>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="flash">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <form method="POST">
+      <input type="text" name="username" placeholder="Username" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <button type="submit">Sumbit</button>
+    </form>
+  </div>
+</body>
+</html>
