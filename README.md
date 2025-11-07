@@ -52,7 +52,7 @@ File-Manager-Site/
 
 🧮 Display file size and modification date
 
-🌐 Dual-language UI (Hebrew / English)
+🌐 Dual-language UI (Hebrew)
 
 🔐 Simple login system
 
