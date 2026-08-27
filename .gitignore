@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+# user-uploaded content must never be committed
+uploads/
+*.zip
+.env
+*.log
+.DS_Store
